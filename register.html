@@ -29,7 +29,7 @@
             if (username && password) {
                 const registerData = { username, password };
 
-                fetch('http://localhost:6553/api/v1/register', {
+                fetch('http://localhost:3000/api/v1/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(registerData),
