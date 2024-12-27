@@ -141,11 +141,6 @@ app.post('/api/v1/statuses', upload.single('image'), async (req, res) => {
             imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
         }
 
-        // 画像URLが提供されない場合のエラーハンドリング
-        if (!imageUrl) {
-            return res.status(400).json({ error: '画像が必要です' });
-        }
-
         const result = await pool.query(
             'INSERT INTO posts (content, user_id, image_url) VALUES ($1, $2, $3) RETURNING id, content, created_at, image_url',
             [content || '', userId, imageUrl]
@@ -158,6 +153,7 @@ app.post('/api/v1/statuses', upload.single('image'), async (req, res) => {
         res.status(500).json({ error: '投稿の作成に失敗しました' });
     }
 });
+
 
 app.delete('/api/v1/statuses/:id', async (req, res) => {
     const postId = req.params.id;
