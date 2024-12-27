@@ -137,8 +137,8 @@ app.post('/api/v1/statuses', upload.single('image'), async (req, res) => {
 
         let imageUrl = null;
         if (req.file) {
-            // 画像URLを作成（`http://localhost:6553/uploads/<filename>`）
-            imageUrl = `http://localhost:6553/uploads/${req.file.filename}`;
+            // 画像URLを作成（`http://localhost:3000/uploads/<filename>`）
+            imageUrl = `http://localhost:3000/uploads/${req.file.filename}`;
         }
 
         // 画像URLが提供されない場合のエラーハンドリング
