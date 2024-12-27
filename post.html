@@ -30,7 +30,7 @@
                 return;
             }
 
-            const apiUrl = 'http://localhost:6553/api/v1/statuses';
+            const apiUrl = 'http://localhost:3000/api/v1/statuses';
             const token = localStorage.getItem('auth_token');
 
             if (!token) {
@@ -92,7 +92,7 @@
                 return;
             }
 
-            fetch('http://localhost:6553/api/v1/delete-account', {
+            fetch('http://localhost:3000/api/v1/delete-account', {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
