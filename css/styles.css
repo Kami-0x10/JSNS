@@ -1,0 +1,146 @@
+/* 基本のスタイル */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e9ecef; /* 優しい背景色に変更 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* コンテナ */
+.container {
+    background-color: white;
+    padding: 40px; /* 内側の余白をさらに増やして快適に */
+    border-radius: 16px; /* 丸みを増して現代的に */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 500px; /* 少し広めに設定 */
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0 15px;  /* スマホ画面での余白調整 */
+}
+
+/* 見出し */
+h1 {
+    font-size: 32px; /* より目立つサイズに */
+    margin-bottom: 20px;
+    color: #212529; /* 高コントラストの色 */
+    font-weight: bold;
+}
+
+/* フォーム */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* フォーム要素間の隙間を少し狭く */
+}
+
+/* ラベル */
+label {
+    font-size: 14px;
+    text-align: left;
+    color: #495057;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+/* 入力フィールド */
+input[type="text"], input[type="password"], textarea {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+/* ボタン */
+.button {
+    background-color: #28a745; /* 成功を示す緑色 */
+    color: white;
+    padding: 14px 0;
+    font-size: 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #218838;
+    transform: translateY(-2px); /* ホバー時の浮き上がり効果 */
+}
+
+.button:active {
+    background-color: #1e7e34;
+    transform: translateY(0); /* 押したときに元の位置に戻る */
+}
+
+/* リンク */
+a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 24px;
+    }
+    input[type="text"], input[type="password"], textarea, .button {
+        font-size: 14px;
+    }
+}
+
+/* 投稿のカード */
+.post {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 投稿画像のスタイル */
+.post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover; /* 画像がコンテナ内で切り取られないようにする */
+    display: block; /* ブロック表示にして余白をなくす */
+    margin: 0 auto; /* 画像を中央に配置 */
+}

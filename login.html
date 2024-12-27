@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ログイン</h1>
+        <div class="form">
+            <label for="username">ユーザー名</label>
+            <input type="text" id="username" placeholder="ユーザー名を入力" />
+
+            <label for="password">パスワード</label>
+            <input type="password" id="password" placeholder="パスワードを入力" />
+
+            <a href="javascript:void(0);" id="login-btn" class="button">ログイン</a>
+            <a href="register.html" class="link">新規登録はこちら</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-btn').onclick = function() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (username && password) {
+                const loginData = { username, password };
+
+                fetch('http://localhost:6553/api/v1/login', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(loginData),
+                    credentials: 'include',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.error || '不明なエラー');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.token) {
+                        // トークンをlocalStorageに保存する際、キーを 'auth_token' と統一する
+                        localStorage.setItem('auth_token', data.token);
+                        alert('ログイン成功');
+                        window.location.href = 'timeline.html';
+                    } else {
+                        alert('ログイン失敗: ' + data.error);
+                    }
+                })
+                .catch(err => {
+                    alert('エラー: ' + err.message);  // より詳細なエラーメッセージを表示
+                });
+            } else {
+                alert('ユーザー名とパスワードを入力してください');
+            }
+        };
+    </script>
+</body>
+</html>

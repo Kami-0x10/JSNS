@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新しい投稿</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>新しい投稿</h1>
+        <div class="form">
+            <textarea id="content" placeholder="投稿内容を入力してください"></textarea>
+            <input type="file" id="image" accept="image/*">
+            <button id="post-btn" class="button">投稿</button>
+            <a href="timeline.html" class="button">タイムラインに戻る</a>
+            <button id="logout-btn" class="button">ログアウト</button> <!-- ログアウトボタン -->
+            <button id="delete-account-btn" class="button">アカウント削除</button> <!-- アカウント削除ボタン -->
+        </div>
+    </div>
+
+    <script>
+        // 投稿処理
+        document.getElementById('post-btn').onclick = function () {
+            var content = document.getElementById('content').value.trim();
+            var imageFile = document.getElementById('image').files[0];
+
+            if (!content && !imageFile) {
+                alert('投稿内容または画像を入力してください');
+                return;
+            }
+
+            const apiUrl = 'http://localhost:6553/api/v1/statuses';
+            const token = localStorage.getItem('auth_token');
+
+            if (!token) {
+                alert('ログインされていません。');
+                return;
+            }
+
+            const formData = new FormData();
+            if (content) formData.append('content', content);
+            if (imageFile) formData.append('image', imageFile);
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: formData,
+                credentials: 'include',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || '不明なエラー');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.id) {
+                    alert('投稿が送信されました');
+                    window.location.href = 'timeline.html';
+                } else {
+                    alert('投稿の送信に失敗しました');
+                }
+            })
+            .catch(error => {
+                alert('投稿の送信に失敗しました。エラー: ' + error.message);
+            });
+        };
+
+        // ログアウト処理
+        document.getElementById('logout-btn').onclick = function () {
+            // ローカルストレージから認証トークンを削除
+            localStorage.removeItem('auth_token');
+            // ログインページへリダイレクト
+            window.location.href = 'login.html';
+        };
+
+        // アカウント削除処理
+        document.getElementById('delete-account-btn').onclick = function () {
+            const token = localStorage.getItem('auth_token');
+
+            if (!token) {
+                alert('ログインされていません。');
+                return;
+            }
+
+            if (!confirm('アカウントを削除してもよろしいですか？')) {
+                return;
+            }
+
+            fetch('http://localhost:6553/api/v1/delete-account', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'アカウントが削除されました') {
+                    alert('アカウントが削除されました');
+                    // ログインページへリダイレクト
+                    window.location.href = 'login.html';
+                } else {
+                    alert('アカウント削除に失敗しました');
+                }
+            })
+            .catch(error => {
+                alert('アカウント削除に失敗しました。エラー: ' + error.message);
+            });
+        };
+    </script>
+</body>
+</html>

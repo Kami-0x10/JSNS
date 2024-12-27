@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイムライン</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>タイムライン</h1>
+        <div id="posts"></div>
+        <a href="post.html" class="button">新しい投稿</a>
+    </div>
+
+    <script>
+        // ログインしていない場合、ログインページへリダイレクト
+        if (!localStorage.getItem('auth_token')) {
+            window.location.href = 'login.html';
+        }
+
+        // タイムラインを取得して表示
+        fetch('http://localhost:6553/api/v1/timelines/public', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+            },
+            credentials: 'include',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('タイムラインの読み込みに失敗しました。');
+            }
+            return response.json();
+        })
+        .then(posts => {
+            const postsContainer = document.getElementById('posts');
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('post');
+
+                let imageHtml = '';
+                if (post.image_url) {
+                    let imageUrl = post.image_url;
+                    if (!imageUrl.startsWith('http')) {
+                        imageUrl = `http://localhost:6553/uploads/${imageUrl}`;
+                    }
+
+                    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+                    const ext = imageUrl.slice(-4).toLowerCase();
+                    if (validExtensions.includes(ext)) {
+                        imageHtml = `<img src="${imageUrl}" alt="Post image" style="max-width: 100%; height: auto;">`;
+                    } else {
+                        imageHtml = `<p>画像ファイルではありません。</p>`;
+                    }
+                }
+
+                postElement.innerHTML = `
+                    <p><strong>${post.username}</strong> (${new Date(post.created_at).toLocaleString()})</p>
+                    <p>${post.content}</p>
+                    ${imageHtml}
+                    <button class="delete-button" data-id="${post.id}">削除</button>
+                `;
+                postsContainer.appendChild(postElement);
+            });
+
+            // 削除ボタンのクリックイベント
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', event => {
+                    const postId = parseInt(event.target.getAttribute('data-id'), 10);
+
+                    if (Number.isNaN(postId)) {
+                        console.error('削除対象の投稿 ID が無効です。');
+                        return;
+                    }
+
+                    fetch(`http://localhost:6553/api/v1/statuses/${postId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('投稿の削除に失敗しました。');
+                        }
+                        alert('投稿が削除されました。');
+
+                        // 削除した投稿を即時にDOMから削除
+                        const postElement = event.target.closest('.post');
+                        if (postElement) {
+                            postElement.remove();
+                        }
+                    })
+                    .catch(error => {
+                        alert('削除に失敗しました。');
+                        console.error(error);
+                    });
+                });
+            });
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error(error);
+        });
+    </script>
+</body>
+</html>
