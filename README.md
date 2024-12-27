@@ -5,6 +5,7 @@ JSで完結するSNSもどき<br>
 linux(WSLでもよい)<br>
 node js、npm、psqlが動くサーバ<br>
 htmlクライアントサーバ(できればあったほうがいい)<br>
+クライアント側はvscodeのliveserverあたりがいい感じ<br>
 ブラウザ<br>
 以下必須パッケージ(npm installしちゃってください)<br>
 <br>
