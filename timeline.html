@@ -20,7 +20,7 @@
         }
 
         // タイムラインを取得して表示
-        fetch('http://localhost:6553/api/v1/timelines/public', {
+        fetch('http://localhost:3000/api/v1/timelines/public', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
@@ -43,7 +43,7 @@
                 if (post.image_url) {
                     let imageUrl = post.image_url;
                     if (!imageUrl.startsWith('http')) {
-                        imageUrl = `http://localhost:6553/uploads/${imageUrl}`;
+                        imageUrl = `http://localhost:3000/uploads/${imageUrl}`;
                     }
 
                     const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
@@ -74,7 +74,7 @@
                         return;
                     }
 
-                    fetch(`http://localhost:6553/api/v1/statuses/${postId}`, {
+                    fetch(`http://localhost:3000/api/v1/statuses/${postId}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
